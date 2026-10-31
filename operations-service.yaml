@@ -1,0 +1,53 @@
+spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9094,localhost:9096}
+    listener:
+      ack-mode: manual
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        retries: 3
+        spring.json.add.type.headers: false
+    consumer:
+      group-id: operations-service-webhook-consumer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "com.uvicorn.*"
+        spring.json.use.type.headers: false
+        spring.json.value.default.type: java.util.LinkedHashMap
+
+app:
+  kafka:
+    topics:
+      payment: payments.events
+      order: orders.events
+      refund: refund.events
+      settlement: settlement.events
+      payments: payments.events
+      orders: orders.events
+      refunds: refund.events
+      settlements: settlement.events
+  webhook:
+    delivery:
+      redis-key: ${WEBHOOK_RETRY_REDIS_KEY:webhook-retry}
+      poll-batch-size: ${WEBHOOK_POLL_BATCH_SIZE:100}
+
+webhook:
+  delivery:
+    signature-header: ${WEBHOOK_SIGNATURE_HEADER:X-Razorpay-Signature}

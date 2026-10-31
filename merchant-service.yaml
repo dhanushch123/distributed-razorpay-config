@@ -1,0 +1,16 @@
+﻿spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+jwt:
+  private-key: ${JWT_PRIVATE_KEY}
+
+vault:
+  master-key: ${VAULT_MASTER_KEY}

@@ -1,0 +1,51 @@
+﻿spring:
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092,localhost:9094,localhost:9096}
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        enable.idempotence: true
+        max.in.flight.requests.per.connection: 5
+        retries: 3
+        spring.json.add.type.headers: false
+
+app:
+  kafka:
+    topics:
+      payment: ${KAFKA_TOPIC_PAYMENT:payments.events}
+      order: ${KAFKA_TOPIC_ORDER:orders.events}
+      refund: ${KAFKA_TOPIC_REFUND:refund.events}
+      settlement: ${KAFKA_TOPIC_SETTLEMENT:settlement.events}
+  rate-limit:
+    method: fixed
+
+payment:
+  order:
+    default-order-expiry-minutes: ${PAYMENT_ORDER_DEFAULT_EXPIRY_MINUTES:30}
+  simulator:
+    poll-interval-ms: ${PAYMENT_SIMULATOR_POLL_INTERVAL_MS:5000}
+    chaos-mode: ${PAYMENT_SIMULATOR_CHAOS_MODE:NORMAL}
+    methods:
+      CARD:
+        min-delay-seconds: ${PAYMENT_CARD_MIN_DELAY_SECONDS:2}
+        max-delay-seconds: ${PAYMENT_CARD_MAX_DELAY_SECONDS:6}
+        success-rate: ${PAYMENT_CARD_SUCCESS_RATE:90}
+      UPI:
+        min-delay-seconds: ${PAYMENT_UPI_MIN_DELAY_SECONDS:1}
+        max-delay-seconds: ${PAYMENT_UPI_MAX_DELAY_SECONDS:3}
+        success-rate: ${PAYMENT_UPI_SUCCESS_RATE:95}
+      NET_BANKING:
+        min-delay-seconds: ${PAYMENT_NET_BANKING_MIN_DELAY_SECONDS:4}
+        max-delay-seconds: ${PAYMENT_NET_BANKING_MAX_DELAY_SECONDS:10}
+        success-rate: ${PAYMENT_NET_BANKING_SUCCESS_RATE:80}
