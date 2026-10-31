@@ -14,3 +14,10 @@ jwt:
 
 vault:
   master-key: ${VAULT_MASTER_KEY}
+
+app:
+  rate-limit:
+    method: ${RATE_LIMIT_METHOD:fixed}
+    use-case:
+      api-key:
+        requests-per-minute: ${API_KEY_REQUESTS_PER_MINUTE:10}
