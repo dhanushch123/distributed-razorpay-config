@@ -1,4 +1,4 @@
-﻿spring:
+spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -21,3 +21,6 @@ app:
     use-case:
       api-key:
         requests-per-minute: ${API_KEY_REQUESTS_PER_MINUTE:10}
+
+server:
+  port: 8093

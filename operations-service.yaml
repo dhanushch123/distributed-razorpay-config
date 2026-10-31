@@ -51,3 +51,6 @@ app:
 webhook:
   delivery:
     signature-header: ${WEBHOOK_SIGNATURE_HEADER:X-Razorpay-Signature}
+
+server:
+  port: 8095

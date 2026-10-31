@@ -1,4 +1,4 @@
-﻿spring:
+spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -49,3 +49,6 @@ payment:
         min-delay-seconds: ${PAYMENT_NET_BANKING_MIN_DELAY_SECONDS:4}
         max-delay-seconds: ${PAYMENT_NET_BANKING_MAX_DELAY_SECONDS:10}
         success-rate: ${PAYMENT_NET_BANKING_SUCCESS_RATE:80}
+
+server:
+  port: 8094

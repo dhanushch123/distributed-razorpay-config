@@ -1,4 +1,4 @@
-﻿spring:
+spring:
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -11,3 +11,6 @@
 
 vault:
   master-key: ${VAULT_MASTER_KEY}
+
+server:
+  port: 8096
