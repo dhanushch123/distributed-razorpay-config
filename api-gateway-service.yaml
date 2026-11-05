@@ -1,0 +1,51 @@
+server:
+  port: ${SERVER_PORT:8000}
+
+app:
+  security:
+    trust-inbound-headers: false
+    public-routes:
+      - "/api/merchants/v1/auth/**"
+  rate-limit:
+    method: ${RATE_LIMIT_METHOD:fixed}
+    use-case:
+      api-key:
+        requests-per-minute: ${API_KEY_REQUESTS_PER_MINUTE:60}
+
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: merchant-auth
+              uri: ${MERCHANT_SERVICE_ROUTE_URI:lb://merchant-service}
+              predicates:
+                - Path=/api/merchants/v1/auth/**
+              filters:
+                - StripPrefix=2
+
+            - id: merchant-service
+              uri: ${MERCHANT_SERVICE_ROUTE_URI:lb://merchant-service}
+              predicates:
+                - Path=/v1/merchants/**
+
+            - id: payment-service
+              uri: ${PAYMENT_SERVICE_ROUTE_URI:lb://payment-service}
+              predicates:
+                - Path=/v1/orders/**, /v1/payments/**
+
+            - id: vault-service
+              uri: ${VAULT_SERVICE_ROUTE_URI:lb://vault-service}
+              predicates:
+                - Path=/v1/vault/**
+
+            - id: operations-service
+              uri: ${OPERATIONS_SERVICE_ROUTE_URI:lb://operations-service}
+              predicates:
+                - Path=/webhook/**
