@@ -26,7 +26,7 @@ spring:
             - id: merchant-auth
               uri: ${MERCHANT_SERVICE_ROUTE_URI:lb://merchant-service}
               predicates:
-                - Path=/api/merchants/v1/auth/**
+                - Path=/api/v1/merchant/auth/**
               filters:
                 - StripPrefix=2
 
