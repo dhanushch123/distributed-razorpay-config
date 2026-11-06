@@ -1,4 +1,14 @@
 spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          merchant-service:
+            connectTimeout: 2000
+            readTimeout: 3000
+          vault-service:
+            connectTimeout: 2000
+            readTimeout: 5000
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -32,10 +42,33 @@ spring:
         spring.json.use.type.headers: false
         spring.json.value.default.type: java.util.LinkedHashMap
 
+resilience4j:
+  circuitbreaker:
+    instances:
+      merchant-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+      vault-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 15s
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      merchant-service:
+        max-attempts: 3
+        wait-duration: 500ms
+      vault-service:
+        max-attempts: 2
+        wait-duration: 500ms
+
 app:
   kafka:
     topics:
       payment: ${KAFKA_TOPIC_PAYMENT:payments.events}
+      authorize-command: ${KAFKA_TOPIC_AUTHORIZE_COMMAND:authorize-command}
       order: ${KAFKA_TOPIC_ORDER:orders.events}
       refund: ${KAFKA_TOPIC_REFUND:refund.events}
       settlement: ${KAFKA_TOPIC_SETTLEMENT:settlement.events}

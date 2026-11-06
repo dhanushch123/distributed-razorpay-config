@@ -1,4 +1,14 @@
 spring:
+  cloud:
+    openfeign:
+      client:
+        config:
+          merchant-service:
+            connectTimeout: 2000
+            readTimeout: 3000
+          payment-service:
+            connectTimeout: 2000
+            readTimeout: 5000
   datasource:
     url: ${DB_URL}
     username: ${DB_USERNAME}
@@ -31,6 +41,28 @@ spring:
         spring.json.trusted.packages: "com.uvicorn.*"
         spring.json.use.type.headers: false
         spring.json.value.default.type: java.util.LinkedHashMap
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      merchant-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+      payment-service:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+  retry:
+    instances:
+      merchant-service:
+        max-attempts: 3
+        wait-duration: 500ms
+      payment-service:
+        max-attempts: 3
+        wait-duration: 500ms
 
 app:
   kafka:
