@@ -6,6 +6,7 @@ app:
     trust-inbound-headers: false
     public-routes:
       - "/v1/merchant/auth/**"
+      - "/actuator/**"
   rate-limit:
     method: ${RATE_LIMIT_METHOD:fixed}
     use-case:
