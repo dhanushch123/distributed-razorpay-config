@@ -15,6 +15,9 @@ jwt:
 vault:
   master-key: ${VAULT_MASTER_KEY}
 
+webhook:
+  secret-encryption-key: ${WEBHOOK_SECRET_ENCRYPTION_KEY}
+
 app:
   rate-limit:
     method: ${RATE_LIMIT_METHOD:fixed}
