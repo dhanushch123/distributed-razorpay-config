@@ -47,4 +47,4 @@ spring:
             - id: operations-service
               uri: ${OPERATIONS_SERVICE_ROUTE_URI:lb://operations-service}
               predicates:
-                - Path=/webhook/**
+                - Path=/webhook/**, /api/admin/**
