@@ -12,6 +12,18 @@ spring:
   threads:
     virtual:
       enabled: true
+  cloud:
+    openfeign:
+      httpclient:
+        hc5:
+          enabled: true
+        max-connections: 200
+        max-connections-per-route: 50
+      client:
+        config:
+          default:
+            connectTimeout: 5000
+            readTimeout: 5000
 
 logging:
   level:
